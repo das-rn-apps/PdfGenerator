@@ -3,76 +3,89 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { ThemeContext, ThemeType } from '@/Context/ThemeContext';
 
 interface LoginProps {
-    onSubmit: (formData: { email: string; password: string }) => void;
+    onSubmit: (formData: { username: string; password: string }) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onSubmit }) => {
-    const [email, setEmail] = useState<string>('');
+    const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
 
     const { theme } = useContext(ThemeContext);
 
     const handleSubmit = () => {
-        if (!email || !password) {
+        if (!username || !password) {
             setError('Please fill in all fields.');
             return;
         }
         setError('');
-        const formData = { email, password };
+        const formData = { username, password };
+        console.log("Sending from the login form", formData)
         onSubmit(formData);
     };
 
     const styles = createStyles(theme);
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>Login</Text>
-            <View style={styles.formGroup}>
-                <Text style={styles.label}>Email address</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter your email"
-                    placeholderTextColor={theme.textColors.placeholderText}
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
+        <View style={styles.all}>
+            <View>
+                <Text style={styles.header}>Login</Text>
             </View>
-            <View style={styles.formGroup}>
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter your password"
-                    placeholderTextColor={theme.textColors.placeholderText}
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    autoCapitalize="none"
-                />
+            <View style={styles.container}>
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Username</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your username"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={username}
+                        onChangeText={setUsername}
+                        autoCapitalize="none"
+                    />
+                </View>
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Password</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your password"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        autoCapitalize="none"
+                    />
+                </View>
+                {error ? (
+                    <Text style={styles.error}>{error}</Text>
+                ) : null}
+
             </View>
-            {error ? (
-                <Text style={styles.error}>{error}</Text>
-            ) : null}
-            <TouchableOpacity
-                style={styles.button}
-                onPress={handleSubmit}
-            >
-                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+            <View>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit}
+                >
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+            </View>
         </View>
+
     );
 };
 
 const createStyles = (theme: ThemeType) =>
     StyleSheet.create({
+        all: {
+            flex: 1,
+            gap: 10,
+            justifyContent: "center"
+        },
         container: {
             width: '100%',
-            padding: 16,
+            padding: 20,
             borderRadius: 8,
             backgroundColor: theme.colors.surface,
-            shadowColor: '#000',
+            shadowColor: theme.colors.primary,
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.2,
             shadowRadius: 4,
@@ -108,17 +121,17 @@ const createStyles = (theme: ThemeType) =>
             color: theme.colors.error,
         },
         button: {
-            height: 48,
+            height: 45,
             borderRadius: 8,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: theme.buttonColors.primaryButtonBackground,
-            marginTop: 8,
+            marginTop: 10
         },
         buttonText: {
+            color: theme.textColors.primaryText,
             fontSize: 16,
             fontWeight: 'bold',
-            color: theme.buttonColors.primaryButtonText,
         },
     });
 

@@ -11,13 +11,13 @@ export default function Index() {
     useEffect(() => {
         const checkAuth = async () => {
             const storedToken = await AsyncStorage.getItem('token');
-            console.log("Checking auth =", storedToken);
+            // console.log("Checking auth =", storedToken);
             if (!storedToken) {
-                router.replace('/(tabs)/Home');
-                // router.replace('/profile');
-                // router.replace('/auth');
+                // router.replace('/(tabs)/Home');
+                // router.replace('(tabs)/Profile');
+                router.replace('/auth');
             } else {
-                router.replace('/profile');
+                router.replace('/Dashboard');
             }
         };
 

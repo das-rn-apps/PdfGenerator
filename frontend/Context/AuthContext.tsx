@@ -10,9 +10,15 @@ interface DecodedToken {
     email: string;
 }
 
+// interface AuthContextType {
+//     auth: string | null;
+//     userDetails: DecodedToken | null;
+//     login: (token: string) => Promise<void>;
+//     logout: () => Promise<void>;
+//     loading: boolean;
+// }
 interface AuthContextType {
     auth: string | null;
-    userDetails: DecodedToken | null;
     login: (token: string) => Promise<void>;
     logout: () => Promise<void>;
     loading: boolean;
@@ -28,14 +34,15 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     useEffect(() => {
         const fetchAuth = async () => {
             const token = await AsyncStorage.getItem('token');
+            // console.log("TOKEN GENERATED", token);
             if (token) {
                 setAuth(token);
-                try {
-                    const decodedToken = jwtDecode<DecodedToken>(token);
-                    setUserDetails(decodedToken);
-                } catch (error) {
-                    console.error('Failed to decode token:', error);
-                }
+                // try {
+                //     const decodedToken = jwtDecode<DecodedToken>(token);
+                //     setUserDetails(decodedToken);
+                // } catch (error) {
+                //     console.error('Failed to decode token:', error);
+                // }
             }
             setLoading(false);
         };
@@ -46,9 +53,11 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const login = async (token: string) => {
         try {
             await AsyncStorage.setItem('token', token);
+
+            // console.log("TOKEN GENERATED after login", token);
             setAuth(token);
-            const decodedToken = jwtDecode<DecodedToken>(token);
-            setUserDetails(decodedToken);
+            // const decodedToken = jwtDecode<DecodedToken>(token);
+            // setUserDetails(decodedToken);
         } catch (error) {
             console.error('Failed to decode token:', error);
         }
@@ -58,14 +67,15 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         try {
             await AsyncStorage.removeItem('token');
             setAuth(null);
-            setUserDetails(null);
+            // setUserDetails(null);
         } catch (error) {
             console.error('Failed to remove token:', error);
         }
     };
 
     return (
-        <AuthContext.Provider value={{ auth, userDetails, login, logout, loading }}>
+        <AuthContext.Provider value={{ auth, login, logout, loading }}>
+            {/* <AuthContext.Provider value={{ auth, userDetails, login, logout, loading }}> */}
             {children}
         </AuthContext.Provider>
     );

@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-// import axios from 'axios';
 import { View, Text, Alert, StyleSheet, SafeAreaView } from 'react-native';
 import { useAuth } from '../Context/AuthContext';
 import { ThemeContext, ThemeType } from '../Context/ThemeContext';
@@ -8,28 +7,56 @@ import Signup from '@/Components/Auth/Signup';
 // import { router } from 'expo-router';
 // import { BASE_URL } from '@env';
 import Loader from '@/Components/General/Loader';
+import axios from 'axios';
+import { BASE_URL } from '@env';
+import { router } from 'expo-router';
 
 type FormData = {
     email: string;
     password: string;
+    username: string;
     firstName: string;
     lastName: string;
     dateOfBirth: Date;
 };
 
 const Auth: React.FC = () => {
+
     const [isSignup, setIsSignup] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const { login } = useAuth();
+    const { login, auth } = useAuth();
     const { theme } = useContext(ThemeContext);
 
-    const handleLogin = async (formData: { email: string; password: string }) => {
-        console.log(formData);
+    const handleLogin = async (formData: { username: string; password: string }) => {
+
+        setIsLoading(true);
+        try {
+            const res = await axios.post(`${BASE_URL}/user/login/`, formData);
+            await login(res.data.token);
+            router.replace('/Dashboard')
+            // Alert.alert('Success', 'Login successful!');
+            setIsSignup(false);
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'An error occurred while login.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSignup = async (formData: FormData) => {
-        console.log(formData);
+        setIsLoading(true);
+        try {
+            const res = await axios.post(`${BASE_URL}/user/register/`, formData);
+            Alert.alert('Success', 'Registration successful!');
+            setIsSignup(false);
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'An error occurred while registering.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const styles = createStyles(theme);

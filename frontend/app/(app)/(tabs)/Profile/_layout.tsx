@@ -11,12 +11,14 @@ export default function Layout() {
                     options={{
                         drawerLabel: 'Home',
                         title: 'overview',
+                        // headerShown: false
                     }}
                 />
                 <Drawer.Screen
                     name="[id]"
                     options={{
                         drawerLabel: 'User',
+                        // headerShown: false,
                         title: 'overview',
                     }}
                 />

@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import { Tabs } from 'expo-router'
 import { ThemeContext } from '@/Context/ThemeContext';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 
 const _layout = () => {
@@ -21,6 +22,16 @@ const _layout = () => {
                 },
             }}
         >
+            <Tabs.Screen name='Dashboard' options={{
+                headerShown: false,
+                title: "dashboard",
+                tabBarIcon: ({ focused }) =>
+                    focused ? (
+                        <FontAwesome name="dashboard" size={30} color={theme.colors.primary} />
+                    ) : (
+                        <FontAwesome name="dashboard" size={24} color={theme.textColors.secondaryText} />
+                    ),
+            }} />
             <Tabs.Screen name='Home' options={{
                 headerShown: false,
                 title: "Home",
